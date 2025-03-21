@@ -84,7 +84,7 @@ export class  UserController {
 
     this.deleteUser
     .execute(id)
-    .then(data => res.status(201).json(data))
+    .then(data => res.status(204).json(data))
     .catch(err => this.handleError(err, res))
   }
 
