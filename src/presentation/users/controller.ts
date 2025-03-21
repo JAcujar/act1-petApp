@@ -5,6 +5,8 @@ import { LoginUserService } from "./services/login-user.service";
 import { FinderOneUserService } from "./services/finder-user.service";
 import { UpdaterUserService } from "./services/updater-user.service";
 import { DeleteUserService } from "./services/eliminator-user.service";
+import { CustomError, RegisterUserDto } from "../../domain";
+
 
 
 export class  UserController {
@@ -18,43 +20,63 @@ export class  UserController {
     private readonly deleteUser: DeleteUserService,
   ) {}
 
-  register = (req: Request, res: Response) => {
-    this.registerUser
-    .execute()
-    .then(message => res.status(201).json(message))
-    .catch(err => res.status(500).json({ message: err.message }))
+  private handleError = (error: unknown, res: Response) => {
+    if (error instanceof CustomError){
+      return res.status(error.statusCode).json({message: error.message})
+    }
+
+    console.error(error);
+    return res.status(500).json({ message: 'Something went very wrong🧨'})
   }
 
-  finder = (req: Request, res: Response) => {
-    this.finderUsers
-    .execute()
-    .then(users => res.status(200).json(users))
-    .catch(err => res.status(500).json({message: err.message}))
+  register = (req: Request, res: Response) => {
+    const [err, registerUserDto] = RegisterUserDto.execute(req.body)
+
+    if (err) {
+      return res.status(422).json({ message: err })
+    }
+
+    this.registerUser
+    .execute(registerUserDto!)
+    .then(data => res.status(201).json(data))
+    .catch(err => this.handleError(err, res))
   }
 
   login = (req: Request, res: Response) => {
     this.loginUsers
     .execute()
-    .then(user => res.status(200).json(user))
-    .catch(err => res.status(500).json({message: err.message}))
+    .then(data => res.status(201).json(data))
+    .catch(err => this.handleError(err, res))
   }
 
   finderOne = (req: Request, res: Response) => {
-    const { id } = req.params;
+      const { id } = req.params;
 
-    this.finderOneUser
-    .execute(id)
-    .then(user => res.status(200).json(user))
-    .catch(err => res.status(500).json({ message: err.message }))
+      this.finderOneUser
+      .execute(id)
+      .then(data => res.status(201).json(data))
+      .catch(err => this.handleError(err, res))
+  }
+
+  finder = (req: Request, res: Response) => {
+    this.finderUsers
+    .execute()
+    .then(data => res.status(201).json(data))
+    .catch(err => this.handleError(err, res))
   }
 
   updater = (req: Request, res: Response) => {
     const { id } = req.params
+    const [err, registerUserDto] = RegisterUserDto.execute(req.body)
+
+    if (err) {
+      return res.status(422).json({ message: err })
+    }
     
     this.updatesUser
-    .execute(id)
-    .then(user => res.status(200).json(user))
-    .catch(err => res.status(500).json({ message: err.message}))
+    .execute(id, registerUserDto!)
+    .then(data => res.status(201).json(data))
+    .catch(err => this.handleError(err, res))
   }
 
   delete = (req: Request, res: Response) => {
@@ -62,33 +84,8 @@ export class  UserController {
 
     this.deleteUser
     .execute(id)
-    .then(user => res.status(200).json(user))
-    .catch(err => res.status(500).json({ message: err.message}))
+    .then(data => res.status(201).json(data))
+    .catch(err => this.handleError(err, res))
   }
 
 } 
-
- // findOne = (req: Request, res: Response) => {
-  //   const { id } = req.params
-  //   console.log(req.params)
-  //   return res.status(200).json({
-  //     id: id,
-  //     message: "Find one request to the homepage from the user controller class",
-  //   })
-  // }
-
-  // update = (req: Request, res: Response) => {
-  //   const { id } = req.params
-  //   return res.status(200).json({
-  //     id: id,
-  //     message: "Update request to the homepage from the user controller class"
-  //   })
-  // }
-
-  // delete = (req: Request, res: Response) => {
-  //   const { id } = req.params
-  //   return res.status(200).json({
-  //     id: id,
-  //     message: "Delete request to the homepage from the user controller class"
-  //   })
-  // }

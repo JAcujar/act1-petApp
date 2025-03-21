@@ -12,7 +12,6 @@ export class AppRoutes {
     // Rutas para petPost
     router.use("/api/petpost", PetPostsRoutes.routes)
 
-
     return router;
   }
 }

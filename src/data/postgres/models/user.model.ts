@@ -22,13 +22,13 @@ export class User extends BaseEntity {
   id: string
 
   @Column("varchar", {
-    length: 255,
+    length: 150,
     nullable: false
   })
   name: string
 
   @Column("varchar", {
-    length: 255,
+    length: 150,
     nullable: false,
     unique: true,
   })
@@ -48,7 +48,7 @@ export class User extends BaseEntity {
   role: UserRole
 
   @Column("boolean",{
-    default: false,
+    default: true,
     nullable: false
   })
   status: boolean

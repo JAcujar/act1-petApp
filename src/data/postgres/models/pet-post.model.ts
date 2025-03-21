@@ -29,10 +29,10 @@ export class PetPost extends BaseEntity {
   user_id: number
 
   @Column("varchar",{
-    length: 255,
+    length: 60,
     nullable: false
   })
-  pet_name: string
+  petName: string
 
   @Column("text")
   description: string
@@ -44,15 +44,15 @@ export class PetPost extends BaseEntity {
 
   @Column("enum",{
     enum: StatusPost,
-    default: StatusPost.APPROVED
+    default: StatusPost.PENDING
   })
-  status: boolean
+  status: StatusPost
 
   @Column("boolean", {
-    default: false,
+    default: true,
     nullable: false,
   })
-  has_founded: boolean
+  hasFounded: boolean
 
   @Column("timestamp",{
     default: () => "CURRENT_TIMESTAMP",

@@ -1,8 +1,27 @@
+import { User } from "../../../data";
+import { CustomError, RegisterUserDto } from "../../../domain";
+
 export class RegisterUserService {
   
-  async execute(){
-    return {
-      message: "User register succesfully"
+  async execute(userData: RegisterUserDto){
+
+      const user = new User()
+
+      user.name = userData.name
+      user.email = userData.email
+      user.password = userData.password
+
+    try {
+      await user.save()
+      return {
+        message: 'User creater succesfully',
+      }
     }
+    catch (error) {
+      throw CustomError.internalServer('Error creating user')
+    }
+    // return {
+    //   message: "User register succesfully"
+    // }
   }
 }
