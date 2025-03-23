@@ -1,6 +1,6 @@
 export class UpdatePetPostService {
-  async execute(userId: string){
-    const id = userId
+  async execute(petPostId: string){
+    const id = petPostId
 
     return {
       id: id,

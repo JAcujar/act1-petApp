@@ -14,14 +14,11 @@ export class RegisterUserService {
     try {
       await user.save()
       return {
-        message: 'User creater succesfully',
+        message: 'User created succesfully',
       }
     }
     catch (error) {
       throw CustomError.internalServer('Error creating user')
     }
-    // return {
-    //   message: "User register succesfully"
-    // }
   }
 }
